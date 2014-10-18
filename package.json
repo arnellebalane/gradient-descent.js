@@ -1,0 +1,23 @@
+{
+    "name": "gradient-descent.js",
+    "version": "0.0.0",
+    "description": "javascript gradient descent library",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/arnellebalane/gradient-descent.js.git"
+    },
+    "author": "Arnelle Balane",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/arnellebalane/gradient-descent.js/issues"
+    },
+    "homepage": "https://github.com/arnellebalane/gradient-descent.js",
+    "devDependencies": {
+        "gulp": "*",
+        "gulp-jshint": "*",
+        "jshint-stylish": "*"
+    }
+}
