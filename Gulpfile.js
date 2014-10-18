@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
-var stylish = require('jshing-stylish');
+var stylish = require('jshint-stylish');
 
 gulp.task('jshint', function() {
     gulp.src('src/**/*.js')
