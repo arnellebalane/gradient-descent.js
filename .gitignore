@@ -1,8 +1,5 @@
 # ignore node_modules
 node_modules/
 
-# bower components
-bower_components/
-
 # ignore build directory
 build/
