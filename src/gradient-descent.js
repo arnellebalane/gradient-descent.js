@@ -13,6 +13,7 @@
         this.features = config.features || 1;
         this.thetas = config.thetas || [];
         this.cost_threshold = config.cost_threshold || 0.01;
+        this.alpha = config.alpha || 0.1;
         if (!this.thetas.length) {
             for (var i = 0; i <= this.features; i++) {
                 this.thetas.push(0);
