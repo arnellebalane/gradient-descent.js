@@ -62,11 +62,18 @@
         };
 
         this.publish = function(event, data) {
-            // @todo implement this
+            if (this.subscribers.hasOwnProperty(event)) {
+                this.subscribers[event].forEach(function(callback) {
+                    callback(data);
+                });
+            }
         };
 
         this.subscribe = function(event, callback) {
-            // @todo implement this
+            if (!this.subscribers.hasOwnProperty(event)) {
+                this.subscribers[event] = [];
+            }
+            this.subscribers[event].push(callback);
         };
     }
 
