@@ -59,7 +59,11 @@
          *               to be predicted.
          */
         this.predict = function(features) {
-            // @todo implement this
+            var result = this.thetas[0];
+            for (var i = 0; i < features.length; i++) {
+                result += (this.thetas[i + 1] * features[i]);
+            }
+            return result;
         };
 
         this.publish = function(event, data) {
