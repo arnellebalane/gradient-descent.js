@@ -26,19 +26,16 @@ function configure(config) {
  *           `features` and `label`.
  */
 function train(data) {
-    training_data = data;
-    var hypothesis_cost = cost();
-    send('log', hypothesis_cost);
-    for (var i = 0; i < thetas.length; i++) {
-        updated = update(i);
-        send('log', 'updated theta ' + i + ': ' + updated);
-    }
-    // @todo solve for the cost given the values of the thetas
-    // @todo update the thetas if necessary
-    //       everytime the thetas array is fully updated, send a message
-    //       back to the parent script containing the new theta values
+    do {
+        var hypothesis_cost = cost();
+        var updated_thetas = [];
+        for (var i = 0; i < thetas.length; i++) {
+          updated_thetas.push(update(i));
+        }
+        thetas = updated_thetas;
+        send('update_theta', thetas);
+    } while (hypothesis_cost > cost_threshold);
 }
-
 
 /*
  * The cost function, returns the cost of the hypothesis given
