@@ -10,6 +10,9 @@
         "describe": true,
         "it": true,
         "define": true,
-        "matrix": true
+        "matrix": true,
+        "Worker": true,
+        "onmessage": true,
+        "postMessage": true
     }
 }

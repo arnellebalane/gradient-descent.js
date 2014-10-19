@@ -9,7 +9,11 @@
         "type": "git",
         "url": "https://github.com/arnellebalane/gradient-descent.js.git"
     },
-    "author": "Arnelle Balane",
+    "authors": [
+        "Arnelle Balane <arnellebalane@gmail.com>",
+        "Julia Camille Menchavez <jcmenchavez@gmail.com>",
+        "Elise Margaret Sumanga <elisemargaret@gmail.com>"
+    ],
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/arnellebalane/gradient-descent.js/issues"
