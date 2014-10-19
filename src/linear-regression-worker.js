@@ -10,10 +10,12 @@ onmessage = function(e) {
 var thetas = [0];
 var cost_threshold = 0.01;
 var training_data = [];
+var alpha = 0.1;
 
 function configure(config) {
     thetas = config.thetas || thetas;
     cost_threshold = config.cost_threshold || cost_threshold;
+    alpha = config.alpha || alpha;
 }
 
 /*
