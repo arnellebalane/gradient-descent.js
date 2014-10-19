@@ -12,8 +12,9 @@
         this.type = config.type || 'linear-regression';
         this.features = config.features || 1;
         this.thetas = config.thetas || [];
+        this.cost = 1000;
         this.cost_threshold = config.cost_threshold || 0.01;
-        this.alpha = config.alpha || 0.1;
+        this.alpha = config.alpha || 0.01;
         if (!this.thetas.length) {
             for (var i = 0; i <= this.features; i++) {
                 this.thetas.push(0);
@@ -37,7 +38,7 @@
             if (this.type === 'linear-regression') {
                 worker = new Worker(path + '/linear-regression-worker.js');
             }
-            var config = { thetas: this.thetas, cost_threshold: this.cost_threshold };
+            var config = { thetas: this.thetas, cost_threshold: this.cost_threshold, alpha: this.alpha };
             worker.postMessage(JSON.stringify({ command: 'configure', data: config }));
             worker.postMessage(JSON.stringify({ command: 'train', data: data }));
 
@@ -47,6 +48,11 @@
                     console.info(e.data);
                 } else if (e.command === 'update_theta') {
                     this.thetas = e.data;
+                } else if (e.command === 'update_cost') {
+                    this.cost = e.data;
+                    console.info('cost: ' + this.cost);
+                } else if (e.command === 'done') {
+                    this.publish('done', this.thetas);
                 }
             };
         };

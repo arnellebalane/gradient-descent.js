@@ -10,7 +10,7 @@ onmessage = function(e) {
 var thetas = [0];
 var cost_threshold = 0.01;
 var training_data = [];
-var alpha = 0.1;
+var alpha = 0.01;
 
 function configure(config) {
     thetas = config.thetas || thetas;
@@ -26,6 +26,7 @@ function configure(config) {
  *           `features` and `label`.
  */
 function train(data) {
+    training_data = data;
     do {
         var hypothesis_cost = cost();
         var updated_thetas = [];
@@ -34,7 +35,9 @@ function train(data) {
         }
         thetas = updated_thetas;
         send('update_theta', thetas);
+        send('update_cost', hypothesis_cost);
     } while (hypothesis_cost > cost_threshold);
+    send('done', null);
 }
 
 /*
