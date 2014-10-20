@@ -117,7 +117,12 @@
          *           `features` and `label`.
          */
         this.validate = function(data) {
-            // @todo implement this
+            var result = 0;
+            for (var i = 0; i < data.length; i++) {
+                result += Math.pow(this.predict(data[i].features) - data[i].label, 2);
+            }
+            result = result / data.length;
+            return result;
         };
 
         /*
