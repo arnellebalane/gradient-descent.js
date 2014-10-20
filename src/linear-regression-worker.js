@@ -27,8 +27,9 @@ function configure(config) {
  */
 function train(data) {
     training_data = data;
+    var hypothesis_cost = 0;
     do {
-        var hypothesis_cost = cost();
+        hypothesis_cost = cost();
         var updated_thetas = [];
         for (var i = 0; i < thetas.length; i++) {
           updated_thetas.push(update(i));

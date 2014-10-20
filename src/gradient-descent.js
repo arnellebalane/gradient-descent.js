@@ -95,12 +95,12 @@
                     }
                 }
             } else {
-                for (var i = 0; i < data.length; i++) {
-                    data[i] = (data[i] - this.averages[i]) / this.ranges[i];
+                for (var l = 0; l < data.length; l++) {
+                    data[l] = (data[l] - this.averages[l]) / this.ranges[l];
                 }
             }
             return data;
-        }
+        };
 
         /*
          * Predicts the label for the given set of features.
