@@ -8,13 +8,11 @@ onmessage = function(e) {
 };
 
 var thetas = [0];
-var cost_threshold = 0.01;
 var training_data = [];
 var alpha = 0.01;
 
 function configure(config) {
     thetas = param(config.thetas, thetas);
-    cost_threshold = param(config.cost_threshold, cost_threshold);
     alpha = param(config.alpha, alpha);
 }
 
@@ -27,9 +25,8 @@ function configure(config) {
  */
 function train(data) {
     training_data = data;
-    var hypothesis_cost = 0;
-    do {
-        hypothesis_cost = cost();
+    while (true) {
+        var hypothesis_cost = cost();
         send('cost_update', hypothesis_cost);
         var updated_thetas = [];
         for (var i = 0; i < thetas.length; i++) {
@@ -37,8 +34,7 @@ function train(data) {
         }
         thetas = updated_thetas;
         send('thetas_update', thetas);
-    } while (hypothesis_cost > cost_threshold);
-    send('done', null);
+    }
 }
 
 /*

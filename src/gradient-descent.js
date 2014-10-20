@@ -14,7 +14,6 @@
         this.features = param(config.features, 1);
         this.thetas = param(config.thetas, []);
         this.cost = 1000;
-        this.cost_threshold = param(config.cost_threshold, 0.01);
         this.cost_change_threshold = param(config.cost_change_threshold, 0.000001);
         this.alpha = param(config.alpha, 0.01);
         if (!this.thetas.length) {
@@ -47,7 +46,7 @@
             if (this.type === 'linear-regression') {
                 worker = new Worker(path + '/linear-regression-worker.js');
             }
-            var config = { thetas: this.thetas, cost_threshold: this.cost_threshold, alpha: this.alpha };
+            var config = { thetas: this.thetas, alpha: this.alpha };
             worker.postMessage(JSON.stringify({ command: 'configure', data: config }));
             worker.postMessage(JSON.stringify({ command: 'train', data: data }));
 
@@ -66,8 +65,6 @@
                         self.cost = e.data;
                         self.publish('cost_update', self.cost);
                     }
-                } else if (e.command === 'done') {
-                    self.publish('done', self.thetas);
                 }
             };
         };
