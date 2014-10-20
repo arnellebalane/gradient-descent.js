@@ -45,30 +45,34 @@ function train(data) {
  * the values in the thetas array.
  */
 function cost() {
-    var result = 0;
+    var sum = 0;
     for (var i = 0; i < training_data.length; i++) {
-        var sum = thetas[0];
-        for (var j = 0; j < training_data[i].features.length; j++) {
-            sum += (thetas[j + 1] * training_data[i].features[j]);
-        }
-        result += Math.pow(sum - training_data[i].label, 2);
+        sum += Math.pow(hypothesis(training_data[i].features) - training_data[i].label, 2);
     }
-    return 1 / (2 * training_data.length) * result;
+    return 1 / (2 * training_data.length) * sum;
 }
 
 /*
  * Computes the new value for the given theta and returns it.
  */
 function update(index) {
-    var result = 0;
+    var sum = 0;
     for (var i = 0; i < training_data.length; i++) {
-       var sum = thetas[0];
-       for (var j = 0; j < training_data[i].features.length; j++) {
-            sum += (thetas[j + 1] * training_data[i].features[j] )
-       }
-       result += (sum - training_data[i].label) * (index === 0 ? 1 : training_data[i].features[index - 1]);
+        var features = training_data[i].features;
+       sum += (hypothesis(features) - training_data[i].label) * (index === 0 ? 1 : features[index - 1]);
     }
-    return thetas[index] - ((alpha / training_data.length) *  result);
+    return thetas[index] - ((alpha / training_data.length) *  sum);
+}
+
+/*
+ * Computes the hypothesis given the array of features.
+ */
+function hypothesis(x) {
+    var sum = thetas[0];
+    for (var i = 0; i < x.length; i++) {
+        sum += thetas[i + 1] * x[i];
+    }
+    return sum;
 }
 
 function send(command, data) {
