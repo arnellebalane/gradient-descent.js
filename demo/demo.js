@@ -1,5 +1,5 @@
 require(['module', '../src/gradient-descent.js'], function(module, GradientDescent) {
-    var gd = new GradientDescent({ features: 3, cost_threshold: 0.01 });
+    var gd = new GradientDescent({ features: 3, cost_threshold: 0.01, normalize: true });
 
     var training_data = [
         { features: [1, 2, 3], label: 4 },
