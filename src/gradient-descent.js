@@ -38,28 +38,29 @@
         this.train = function(data) {
             if (this._normalize) {
                 data = this.normalize(data);
+                console.log(data);
             }
-            var worker = null;
-            if (this.type === 'linear-regression') {
-                worker = new Worker(path + '/linear-regression-worker.js');
-            }
-            var config = { thetas: this.thetas, cost_threshold: this.cost_threshold, alpha: this.alpha };
-            worker.postMessage(JSON.stringify({ command: 'configure', data: config }));
-            worker.postMessage(JSON.stringify({ command: 'train', data: data }));
+            // var worker = null;
+            // if (this.type === 'linear-regression') {
+            //     worker = new Worker(path + '/linear-regression-worker.js');
+            // }
+            // var config = { thetas: this.thetas, cost_threshold: this.cost_threshold, alpha: this.alpha };
+            // worker.postMessage(JSON.stringify({ command: 'configure', data: config }));
+            // worker.postMessage(JSON.stringify({ command: 'train', data: data }));
 
-            worker.onmessage = function(e) {
-                e = JSON.parse(e.data);
-                if (e.command === 'log') {
-                    console.info(e.data);
-                } else if (e.command === 'update_theta') {
-                    self.thetas = e.data;
-                } else if (e.command === 'update_cost') {
-                    self.cost = e.data;
-                    console.info('cost: ' + self.cost);
-                } else if (e.command === 'done') {
-                    self.publish('done', self.thetas);
-                }
-            };
+            // worker.onmessage = function(e) {
+            //     e = JSON.parse(e.data);
+            //     if (e.command === 'log') {
+            //         console.info(e.data);
+            //     } else if (e.command === 'update_theta') {
+            //         self.thetas = e.data;
+            //     } else if (e.command === 'update_cost') {
+            //         self.cost = e.data;
+            //         console.info('cost: ' + self.cost);
+            //     } else if (e.command === 'done') {
+            //         self.publish('done', self.thetas);
+            //     }
+            // };
         };
 
         /*
@@ -71,7 +72,23 @@
          *           `features` and `label`.
          */
         this.normalize = function(data) {
-            // @todo implement this
+            for (var i = 0; i < data[0].features.length; i++) {
+                var sum = 0;
+                var min = data[0].features[i];
+                var max = data[0].features[i];
+                for (var j = 0; j < data.length; j++) {
+                    if (data[j].features[i] < min) {
+                        min = data[j].features[i];
+                    } else if (data[j].features[i] > max) {
+                        max = data[j].features[i];
+                    }
+                    sum += data[j].features[i];
+                }
+                for (var k = 0; k < data.length; k++) {
+                    data[k].features[i] = (data[k].features[i] - (sum / data.length)) / (max - min);
+                }
+            }
+            return data;
         }
 
         /*
