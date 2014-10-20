@@ -10,4 +10,8 @@ require(['module', '../src/gradient-descent.js'], function(module, GradientDesce
     ];
 
     gd.train(training_data);
+    gd.subscribe('done', function(e) {
+        console.info('training done!');
+        console.log(e);
+    });
 });
