@@ -60,7 +60,7 @@
                 } else if (e.command === 'cost_update') {
                     if (Math.abs(e.data - self.cost) < self.cost_change_threshold) {
                         worker.terminate();
-                        self.publish('done', self.thetas);
+                        self.publish('done', { thetas: self.thetas, cost: self.cost });
                     } else {
                         self.cost = e.data;
                         self.publish('cost_update', self.cost);
@@ -106,6 +106,18 @@
                 }
             }
             return data;
+        };
+
+        /*
+         * Validates the performance of the hypothesis by testing its 
+         * correctness based on the validation data.
+         * 
+         * parameters: 
+         *    data - an array of validation data, each an object with the keys
+         *           `features` and `label`.
+         */
+        this.validate = function(data) {
+            // @todo implement this
         };
 
         /*
