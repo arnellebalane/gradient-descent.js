@@ -13,8 +13,9 @@
         this.type = param(config.type, 'linear-regression');
         this.features = param(config.features, 1);
         this.thetas = param(config.thetas, []);
-        this.cost = 1000;
+        this.cost = 1000000;
         this.cost_change_threshold = param(config.cost_change_threshold, 0.000001);
+        this.cost_trap = 100;
         this.alpha = param(config.alpha, 0.01);
         if (!this.thetas.length) {
             for (var i = 0; i <= this.features; i++) {
@@ -60,7 +61,15 @@
                 } else if (e.command === 'cost_update') {
                     if (Math.abs(e.data - self.cost) < self.cost_change_threshold) {
                         worker.terminate();
-                        self.publish('done', self.thetas);
+                        self.publish('done', { thetas: self.thetas, cost: self.cost });
+                    } else if (e.data > self.cost) {
+                        if (!--self.cost_trap) {
+                            worker.terminate();
+                            self.publish('terminate', 'The cost is increasing. Consider decreasing the value of your alpha.');
+                        } else {
+                            self.cost = e.data;
+                            self.publish('cost_update', self.cost);
+                        }
                     } else {
                         self.cost = e.data;
                         self.publish('cost_update', self.cost);
@@ -106,6 +115,23 @@
                 }
             }
             return data;
+        };
+
+        /*
+         * Validates the performance of the hypothesis by testing its 
+         * correctness based on the validation data.
+         * 
+         * parameters: 
+         *    data - an array of validation data, each an object with the keys
+         *           `features` and `label`.
+         */
+        this.validate = function(data) {
+            var result = 0;
+            for (var i = 0; i < data.length; i++) {
+                result += Math.pow(this.predict(data[i].features) - data[i].label, 2);
+            }
+            result = result / data.length;
+            return result;
         };
 
         /*
