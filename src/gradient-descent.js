@@ -15,11 +15,13 @@
         this.cost = 1000;
         this.cost_threshold = config.cost_threshold || 0.01;
         this.alpha = config.alpha || 0.01;
+        this._normalize = config.normalize || false;
         if (!this.thetas.length) {
             for (var i = 0; i <= this.features; i++) {
                 this.thetas.push(0);
             }
         }
+        var self = this;
 
         // properties used for the publish/subscribe model
         this.subscribers = {};
@@ -34,6 +36,9 @@
          *           `features` and `label`.
          */
         this.train = function(data) {
+            if (this._normalize) {
+                data = this.normalize(data);
+            }
             var worker = null;
             if (this.type === 'linear-regression') {
                 worker = new Worker(path + '/linear-regression-worker.js');
@@ -47,15 +52,27 @@
                 if (e.command === 'log') {
                     console.info(e.data);
                 } else if (e.command === 'update_theta') {
-                    this.thetas = e.data;
+                    self.thetas = e.data;
                 } else if (e.command === 'update_cost') {
-                    this.cost = e.data;
-                    console.info('cost: ' + this.cost);
+                    self.cost = e.data;
+                    console.info('cost: ' + self.cost);
                 } else if (e.command === 'done') {
-                    this.publish('done', this.thetas);
+                    self.publish('done', self.thetas);
                 }
             };
         };
+
+        /*
+         * Normalizes the given data by applying feature scaling and mean
+         * normalization to the features.
+         *
+         * parameters:
+         *    data - an array of training data, each an object with the keys
+         *           `features` and `label`.
+         */
+        this.normalize = function(data) {
+            // @todo implement this
+        }
 
         /*
          * Predicts the label for the given set of features.
