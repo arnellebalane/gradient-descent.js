@@ -12,6 +12,11 @@ require(['module', '../src/gradient-descent.js'], function(module, GradientDesce
     gd.train(training_data);
     gd.subscribe('done', function(e) {
         console.info('training done!');
-        console.log(e);
+        console.log('cost: ' + gd.cost);
+        console.log('thetas: ' + e);
+    });
+
+    gd.subscribe('cost_update', function(e) {
+        console.info(e);
     });
 });

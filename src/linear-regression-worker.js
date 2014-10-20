@@ -13,9 +13,9 @@ var training_data = [];
 var alpha = 0.01;
 
 function configure(config) {
-    thetas = config.thetas || thetas;
-    cost_threshold = config.cost_threshold || cost_threshold;
-    alpha = config.alpha || alpha;
+    thetas = param(config.thetas, thetas);
+    cost_threshold = param(config.cost_threshold, cost_threshold);
+    alpha = param(config.alpha, alpha);
 }
 
 /*
@@ -30,13 +30,13 @@ function train(data) {
     var hypothesis_cost = 0;
     do {
         hypothesis_cost = cost();
+        send('cost_update', hypothesis_cost);
         var updated_thetas = [];
         for (var i = 0; i < thetas.length; i++) {
           updated_thetas.push(update(i));
         }
         thetas = updated_thetas;
-        send('update_theta', thetas);
-        send('update_cost', hypothesis_cost);
+        send('thetas_update', thetas);
     } while (hypothesis_cost > cost_threshold);
     send('done', null);
 }
@@ -74,6 +74,10 @@ function hypothesis(x) {
         sum += thetas[i + 1] * x[i];
     }
     return sum;
+}
+
+function param(value, initial) {
+    return value !== undefined ? value : initial;
 }
 
 function send(command, data) {

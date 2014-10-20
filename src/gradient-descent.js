@@ -9,19 +9,20 @@
     path = path.slice(0, path.length - 1).join('/');
 
     function GradientDescent(config) {
-        config = config || {};
-        this.type = config.type || 'linear-regression';
-        this.features = config.features || 1;
-        this.thetas = config.thetas || [];
+        config = param(config, {});
+        this.type = param(config.type, 'linear-regression');
+        this.features = param(config.features, 1);
+        this.thetas = param(config.thetas, []);
         this.cost = 1000;
-        this.cost_threshold = config.cost_threshold || 0.01;
-        this.alpha = config.alpha || 0.01;
+        this.cost_threshold = param(config.cost_threshold, 0.01);
+        this.cost_change_threshold = param(config.cost_change_threshold, 0.000001);
+        this.alpha = param(config.alpha, 0.01);
         if (!this.thetas.length) {
             for (var i = 0; i <= this.features; i++) {
                 this.thetas.push(0);
             }
         }
-        this._normalize = config.normalize || false;
+        this._normalize = param(config.normalize, false);
         this.averages = [];
         this.ranges = [];
         var self = this;
@@ -54,10 +55,17 @@
                 e = JSON.parse(e.data);
                 if (e.command === 'log') {
                     console.info(e.data);
-                } else if (e.command === 'update_theta') {
+                } else if (e.command === 'thetas_update') {
                     self.thetas = e.data;
-                } else if (e.command === 'update_cost') {
-                    self.cost = e.data;
+                    self.publish('thetas_update', self.thetas);
+                } else if (e.command === 'cost_update') {
+                    if (Math.abs(e.data - self.cost) < self.cost_change_threshold) {
+                        worker.terminate();
+                        self.publish('done', self.thetas);
+                    } else {
+                        self.cost = e.data;
+                        self.publish('cost_update', self.cost);
+                    }
                 } else if (e.command === 'done') {
                     self.publish('done', self.thetas);
                 }
@@ -135,6 +143,10 @@
             }
             this.subscribers[event].push(callback);
         };
+    }
+
+    function param(value, initial) {
+        return value !== undefined ? value : initial;
     }
 
     return GradientDescent;
