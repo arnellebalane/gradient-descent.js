@@ -1,11 +1,12 @@
 (function(root, library) {
     if (typeof define === 'function' && define.amd) {
-        define(['require'], library);
+        define(['module'], library);
     } else {
         root.GradientDescent = library();
     }
-})(this, function(require) {
-    var path = require.toUrl('.');
+})(this, function(module) {
+    var path = module.uri.split('/');
+    path = path.slice(0, path.length - 1).join('/');
 
     function GradientDescent(config) {
         config = config || {};
