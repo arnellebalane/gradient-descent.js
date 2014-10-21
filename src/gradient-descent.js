@@ -15,7 +15,7 @@
         this.thetas = param(config.thetas, []);
         this.cost = 1000000;
         this.cost_change_threshold = param(config.cost_change_threshold, 0.000001);
-        this.cost_trap = 100;
+        this.cost_trap = 15;
         this.alpha = param(config.alpha, 0.01);
         if (!this.thetas.length) {
             for (var i = 0; i <= this.features; i++) {
@@ -128,7 +128,9 @@
         this.validate = function(data) {
             var result = 0;
             for (var i = 0; i < data.length; i++) {
-                result += Math.pow(this.predict(data[i].features) - data[i].label, 2);
+                var prediction = this.predict(data[i].features);
+                this.publish('predict', prediction);
+                result += Math.pow(prediction - data[i].label, 2);
             }
             result = result / data.length;
             return result;
