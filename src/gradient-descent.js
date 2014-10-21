@@ -128,7 +128,9 @@
         this.validate = function(data) {
             var result = 0;
             for (var i = 0; i < data.length; i++) {
-                result += Math.pow(this.predict(data[i].features) - data[i].label, 2);
+                var prediction = this.predict(data[i].features);
+                this.publish('predict', prediction);
+                result += Math.pow(prediction - data[i].label, 2);
             }
             result = result / data.length;
             return result;
