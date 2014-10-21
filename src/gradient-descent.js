@@ -13,6 +13,7 @@
         this.type = param(config.type, 'linear-regression');
         this.features = param(config.features, 1);
         this.thetas = param(config.thetas, []);
+        this.powers = param(config.powers, []);
         this.cost = 1000000;
         this.cost_change_threshold = param(config.cost_change_threshold, 0.000001);
         this.cost_trap = 15;
@@ -47,7 +48,7 @@
             if (this.type === 'linear-regression') {
                 worker = new Worker(path + '/linear-regression-worker.js');
             }
-            var config = { thetas: this.thetas, alpha: this.alpha };
+            var config = { thetas: this.thetas, powers: this.powers, alpha: this.alpha };
             worker.postMessage(JSON.stringify({ command: 'configure', data: config }));
             worker.postMessage(JSON.stringify({ command: 'train', data: data }));
 
@@ -149,7 +150,7 @@
             }
             var result = this.thetas[0];
             for (var i = 0; i < features.length; i++) {
-                result += (this.thetas[i + 1] * features[i]);
+                result += this.thetas[i + 1] * Math.pow(features[i], this.powers[i]);
             }
             return result;
         };

@@ -8,11 +8,13 @@ onmessage = function(e) {
 };
 
 var thetas = [0];
+var powers = [];
 var training_data = [];
 var alpha = 0.01;
 
 function configure(config) {
     thetas = param(config.thetas, thetas);
+    powers = param(config.powers, powers);
     alpha = param(config.alpha, alpha);
 }
 
@@ -67,7 +69,7 @@ function update(index) {
 function hypothesis(x) {
     var sum = thetas[0];
     for (var i = 0; i < x.length; i++) {
-        sum += thetas[i + 1] * x[i];
+        sum += thetas[i + 1] * Math.pow(x[i], powers[i]);
     }
     return sum;
 }
